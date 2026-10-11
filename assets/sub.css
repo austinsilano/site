@@ -1,0 +1,298 @@
+/* ==========================================================
+   Subpages (Experience, Projects, Skills, Certifications, Contact)
+
+   The nav, buttons and mobile menu below are copied from index.html so the
+   header looks identical on every page. If you change the nav in index.html,
+   change it here too.
+
+   Body content uses normal px/clamp sizing (not --u) so it stays readable
+   and scrolls. Only the nav uses the --u reference unit.
+   ========================================================== */
+:root{
+  --u: min(calc(100vw / 1280), calc(100dvh / 760));
+  --navh: calc(67 * var(--u));
+
+  --ink:        #ffffff;
+  --ink-muted:  #ededed;
+  --ink-soft:   #b9bcc4;
+  --panel:      #181818;
+  --white-btn:  #fdfdfd;
+  --btn-ink:    #050505;
+  --line:       rgba(255,255,255,.12);
+
+  --hue: -42deg;          /* video tint; keep in sync with index.html */
+  --accent: #60a5fa;
+
+  --e-soft: cubic-bezier(.25, .8, .3, 1);
+}
+@supports not (height: 100dvh){
+  :root{ --u: min(calc(100vw / 1280), calc(100vh / 760)); }
+}
+
+*{box-sizing:border-box}
+html{background:#000}
+body.sub{
+  margin:0;min-height:100vh;background:#000;color:var(--ink);overflow-x:hidden;
+  font-family:'PJS','Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:geometricPrecision;
+}
+
+/* ---------- backdrop ----------
+   Layer 1 (.sub-bg): the globe still, tinted blue. Shown first, and kept for
+   reduced-motion, data-saver, or if the video can't play.
+   Layer 2 (.sub-video): the same spinning globe as the home page. Fades in
+   once it is actually playing (sub.js adds .video-on to <body>). */
+.sub-bg{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:#000 url("https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/82e7eb75-c65f-490a-99b5-f3d1cad54200.webp") 51% 8% / cover no-repeat;
+  /* Desaturate first, then tint, so the result is the same blue whatever
+     color the still starts as. (A plain hue-rotate leaves magenta/pink
+     areas looking purple.) Raise hue-rotate for a lighter blue, lower it
+     for an indigo. */
+  filter:grayscale(1) sepia(1) hue-rotate(182deg) saturate(2.4) brightness(2.2) contrast(1.1);
+  opacity:.9;
+  transition:opacity 1s ease;
+}
+.sub-video{
+  position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;
+  opacity:0;transition:opacity 1s ease;
+}
+.video-on .sub-video{opacity:.8}
+.video-on .sub-bg{opacity:0}
+.sv{
+  position:absolute;inset:0;width:100%;height:100%;display:block;
+  object-fit:cover;object-position:51% 8%;
+  background:transparent;opacity:0;transition:opacity .9s linear;
+  filter:hue-rotate(var(--hue)) saturate(1.05);   /* same violet -> blue as the home page */
+}
+.sv.is-active{opacity:1}
+.sub-shade{
+  position:fixed;inset:0;z-index:1;pointer-events:none;
+  background:linear-gradient(180deg, rgba(0,0,0,.35) 0%, rgba(0,0,0,.60) 45%, rgba(0,0,0,.85) 100%);
+}
+
+/* ---------- nav (fixed on subpages) ---------- */
+.nav{
+  position:fixed;top:0;left:0;right:0;height:var(--navh);
+  display:flex;align-items:center;
+  padding-left:calc(24.5 * var(--u));padding-right:calc(50.7 * var(--u));z-index:10;
+  background:rgba(0,0,0,.5);
+  -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
+.logo{
+  font-weight:800;font-size:calc(26 * var(--u));letter-spacing:calc(0.45 * var(--u));
+  transform:translateY(calc(-2.4 * var(--u)));line-height:1;color:var(--ink);
+  text-decoration:none;white-space:nowrap;
+}
+.nav-links{
+  position:absolute;left:50%;top:50%;
+  transform:translate(-50%,-50%) translateX(calc(-23 * var(--u)));
+  display:flex;align-items:center;gap:calc(24.3 * var(--u));white-space:nowrap;
+}
+.nav-links a{
+  color:var(--ink-muted);text-decoration:none;font-size:calc(11.5 * var(--u));
+  font-weight:500;letter-spacing:calc(-0.15 * var(--u));line-height:1;
+  transition:color .18s ease;
+}
+.nav-links a:hover,.nav-links a[aria-current="page"]{color:#fff}
+.nav-actions{margin-left:auto;display:flex;align-items:center;gap:calc(6.8 * var(--u))}
+
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  font-family:inherit;text-decoration:none;white-space:nowrap;border:0;cursor:pointer;
+}
+.btn-login{
+  height:calc(28 * var(--u));padding:0 calc(12.9 * var(--u));
+  border-radius:calc(14 * var(--u));background:var(--panel);color:#e8e8e8;
+  font-size:calc(11.5 * var(--u));font-weight:500;letter-spacing:calc(-0.15 * var(--u));
+  transition:background .18s ease,color .18s ease;
+}
+.btn-login:hover{background:#232323;color:#fff}
+.btn-nav-start{
+  height:calc(28 * var(--u));padding-left:calc(13.5 * var(--u));
+  padding-right:calc(14.5 * var(--u));border-radius:calc(14 * var(--u));
+  background:var(--white-btn);color:var(--btn-ink);font-size:calc(11.1 * var(--u));
+  font-weight:500;letter-spacing:0;gap:calc(7 * var(--u));
+  transition:background .18s ease;
+}
+.btn-nav-start:hover{background:#fff}
+.btn-nav-start .arw{width:calc(11.5 * var(--u));height:calc(9.6 * var(--u))}
+
+.burger{
+  display:none;margin-left:auto;width:calc(40 * var(--u));
+  height:calc(28 * var(--u));align-items:center;justify-content:center;
+  background:var(--panel);border-radius:calc(14 * var(--u));border:0;cursor:pointer;padding:0;
+}
+.burger span{display:block;width:16px;height:1.5px;background:#ededed;border-radius:2px;position:relative}
+.burger span::before,.burger span::after{content:"";position:absolute;left:0;width:16px;height:1.5px;
+  background:#ededed;border-radius:2px}
+.burger span::before{top:-5px}
+.burger span::after{top:5px}
+.arw{flex:0 0 auto;display:block}
+
+a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:6px}
+.nav a:focus-visible,.menu a:focus-visible,.burger:focus-visible{border-radius:99px}
+
+.menu{display:none}
+@keyframes menuIn{from{opacity:0;transform:translateY(-6px) scale(.985)}to{opacity:1;transform:none}}
+
+/* ---------- tablet ---------- */
+@media (max-width:1160px){
+  :root{
+    --u: min(
+      max(0.9px, min(calc(100vw / 1280), calc(100dvh / 760))),
+      calc((100vw - 72px) / 575),
+      calc(100dvh / 620)
+    );
+    --navh: max(58px, calc(67 * var(--u)));
+  }
+  .nav{height:var(--navh);
+       padding-left:max(24px, calc(28 * var(--u)));
+       padding-right:max(24px, calc(28 * var(--u)))}
+  .nav-links,.nav-actions{display:none}
+  .burger{display:flex;width:max(46px, calc(48 * var(--u)));
+          height:max(38px, calc(34 * var(--u)));border-radius:999px}
+  .menu{position:fixed;top:calc(var(--navh) - 6px);
+        right:max(24px, calc(28 * var(--u)));width:min(320px, calc(100vw - 48px));
+        background:rgba(10,10,12,.9);-webkit-backdrop-filter:blur(22px);
+        backdrop-filter:blur(22px);border:1px solid rgba(255,255,255,.09);
+        border-radius:20px;padding:10px 8px 12px;flex-direction:column;
+        box-shadow:0 24px 60px rgba(0,0,0,.55);transform-origin:top right;z-index:11}
+  .menu.open{display:flex;animation:menuIn .18s ease both}
+  .menu a{color:var(--ink-muted);text-decoration:none;font-size:15px;font-weight:500;
+          letter-spacing:-.15px;padding:12px 14px;border-radius:12px;
+          transition:background .18s ease,color .18s ease}
+  .menu a:hover,.menu a[aria-current="page"]{background:rgba(255,255,255,.06);color:#fff}
+  .menu .divider{height:1px;background:rgba(255,255,255,.08);margin:8px 14px}
+  .menu .m-start{display:flex;align-items:center;justify-content:center;gap:9px;
+    background:var(--white-btn);color:var(--btn-ink);margin:6px 8px 0;padding:13px 16px;
+    border-radius:14px;font-weight:600}
+  .menu .m-start:hover{background:#fff;color:var(--btn-ink)}
+  .menu .m-start .arw{width:13px;height:11px}
+}
+
+/* ---------- mobile ---------- */
+@media (max-width:552px){
+  :root{--u:1px;--navh:56px}
+  .nav{height:56px;padding:0 20px}
+  .logo{font-size:22px;letter-spacing:-.4px}
+  .burger{width:42px;height:36px}
+  .menu{top:50px;left:16px;right:16px;width:auto}
+  .menu a{font-size:15.5px;padding:13px 14px}
+  .menu .m-start{padding:14px 16px}
+}
+
+/* ==========================================================
+   PAGE CONTENT
+   One layout idea on every page: a label column on the left and the
+   content on the right, separated by hairlines.
+   ========================================================== */
+.page{
+  position:relative;z-index:2;
+  max-width:1000px;margin:0 auto;
+  padding:calc(var(--navh) + clamp(48px, 8vw, 104px)) clamp(20px, 4vw, 40px) clamp(56px, 8vw, 96px);
+  animation:pageIn .7s var(--e-soft) both;
+}
+@keyframes pageIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+.page-head{max-width:760px}
+.page-title{
+  margin:0;font-weight:500;font-size:clamp(44px, 8vw, 84px);
+  line-height:1;letter-spacing:-.03em;
+}
+.lede{
+  margin:22px 0 0;max-width:58ch;font-weight:300;
+  font-size:clamp(16px, 1.7vw, 19px);line-height:1.6;letter-spacing:-.01em;color:#f2f2f2;
+}
+.actions{margin:28px 0 0;display:flex;flex-wrap:wrap;gap:10px}
+.pbtn{
+  display:inline-flex;align-items:center;justify-content:center;
+  height:44px;padding:0 22px;border-radius:22px;
+  font-family:inherit;font-size:15px;font-weight:500;letter-spacing:-.01em;
+  text-decoration:none;white-space:nowrap;
+  background:var(--white-btn);color:var(--btn-ink);
+  transition:background .18s ease;
+}
+.pbtn:hover{background:#fff}
+
+/* ---------- key figures (Experience) ---------- */
+.stats{
+  display:grid;grid-template-columns:repeat(4, 1fr);
+  margin:clamp(40px, 6vw, 64px) 0 0;
+  border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+}
+.stat{padding:22px 20px 22px 0}
+.stat + .stat{padding-left:20px;border-left:1px solid var(--line)}
+.stat b{display:block;font-weight:500;font-size:clamp(30px, 4.4vw, 48px);letter-spacing:-.03em;line-height:1}
+.stat span{display:block;margin-top:10px;font-size:13.5px;line-height:1.45;font-weight:300;color:var(--ink-soft)}
+
+/* ---------- ledger ---------- */
+.ledger{margin:clamp(40px, 6vw, 72px) 0 0;border-top:1px solid var(--line)}
+.stats + .ledger{margin-top:0;border-top:0}
+.row{
+  display:grid;grid-template-columns:minmax(140px, 220px) minmax(0, 1fr);
+  gap:10px clamp(24px, 5vw, 64px);
+  padding:clamp(24px, 3.4vw, 38px) 0;
+  border-bottom:1px solid var(--line);
+}
+.row-label{font-size:14.5px;font-weight:500;line-height:1.5;color:var(--ink-muted)}
+.row-label small{display:block;margin-top:4px;font-size:13.5px;font-weight:300;color:var(--ink-soft)}
+.row-body{min-width:0}
+.row-body h2{margin:0;font-weight:500;font-size:clamp(20px, 2.3vw, 25px);letter-spacing:-.02em;line-height:1.25}
+.row-body .sub-title{margin:6px 0 0;font-weight:300;font-size:16px;line-height:1.5;color:var(--ink-soft)}
+.row-body ul.points{list-style:none;margin:18px 0 0;padding:0;display:grid;gap:12px}
+.row-body ul.points li{
+  position:relative;padding-left:20px;max-width:68ch;
+  font-weight:300;font-size:16px;line-height:1.62;color:#ececec;
+}
+.row-body ul.points li::before{
+  content:"";position:absolute;left:0;top:.82em;width:8px;height:1px;background:var(--accent);
+}
+.row-body .tools{margin:18px 0 0;max-width:68ch;font-size:14.5px;line-height:1.6;font-weight:300;color:var(--ink-soft)}
+.row-body .tools b{font-weight:500;color:var(--ink-muted)}
+.row-body p.plain{margin:0;max-width:60ch;font-weight:300;font-size:16px;line-height:1.62;color:#ececec}
+
+ul.inline{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px 22px}
+ul.inline li{font-weight:300;font-size:16px;line-height:1.5;color:#ececec}
+ul.inline.big li{font-size:clamp(18px, 2vw, 21px);font-weight:400;letter-spacing:-.01em;color:#fff}
+
+a.text{
+  color:var(--accent);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px;
+  transition:color .18s ease;
+}
+a.text:hover{color:#fff}
+.row-body .link-line{margin:18px 0 0;font-size:15.5px}
+
+/* ---------- contact ---------- */
+.contact-link{
+  display:inline-block;font-weight:400;font-size:clamp(20px, 2.8vw, 28px);letter-spacing:-.02em;
+  color:#fff;text-decoration:none;border-bottom:1px solid rgba(255,255,255,.25);
+  padding-bottom:2px;overflow-wrap:anywhere;transition:border-color .18s ease,color .18s ease;
+}
+.contact-link:hover{border-color:var(--accent);color:var(--accent)}
+
+/* ---------- footer ---------- */
+.foot{
+  position:relative;z-index:2;max-width:1000px;margin:0 auto;
+  padding:0 clamp(20px, 4vw, 40px) 40px;
+  display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px 24px;
+  font-size:13.5px;font-weight:300;color:var(--ink-soft);
+}
+.foot a{color:var(--ink-soft);text-decoration:none}
+.foot a:hover{color:#fff}
+
+/* ---------- small screens ---------- */
+@media (max-width:760px){
+  .sub-bg{opacity:.6}   /* keep body text readable over the dots */
+  .video-on .sub-video{opacity:.6}
+  .row{grid-template-columns:minmax(0, 1fr)}
+  .row-label small{display:inline;margin-left:8px}
+  .stats{grid-template-columns:repeat(2, 1fr)}
+  .stat:nth-child(odd){padding-left:0;border-left:0}
+  .stat:nth-child(even){padding-left:20px;border-left:1px solid var(--line)}
+  .stat:nth-child(n+3){border-top:1px solid var(--line)}
+  .stat{padding-top:20px;padding-bottom:20px}
+}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
